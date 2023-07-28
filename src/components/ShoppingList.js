@@ -5,6 +5,7 @@ import Item from "./Item";
 
 function ShoppingList({ items }) {
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [searchItem, setSearchItem] = useState("");
 
   function handleCategoryChange(event) {
     setSelectedCategory(event.target.value);
@@ -16,12 +17,23 @@ function ShoppingList({ items }) {
     return item.category === selectedCategory;
   });
 
+  function handleSearchChange(value) {
+    setSearchItem(value);
+  }
+  const filteredItems = searchItem
+  ? items.filter(
+    (item) => 
+    item.name.toLowerCase()
+    .includes(searchItem.toLowerCase())
+    )
+    : itemsToDisplay;
+
   return (
     <div className="ShoppingList">
       <ItemForm />
-      <Filter onCategoryChange={handleCategoryChange} />
+      <Filter onCategoryChange={handleCategoryChange} onSearchChange={handleSearchChange}/>
       <ul className="Items">
-        {itemsToDisplay.map((item) => (
+        {filteredItems.map((item) => (
           <Item key={item.id} name={item.name} category={item.category} />
         ))}
       </ul>
